@@ -33,22 +33,24 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         imageView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(imageView)
         NSLayoutConstraint.activate([
-            imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 70),
-            imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -70),
-            imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 200),
-            imageView.heightAnchor.constraint(equalToConstant: 100)
+            imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
+            imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
+            imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
+            imageView.heightAnchor.constraint(equalToConstant: 200)
         ])
         imageView.image = UIImage(named: "log")
+        imageView.contentMode = .scaleToFill
     }
     
     private func pickerViewParameters(){
         pickerView.translatesAutoresizingMaskIntoConstraints = false
+        pickerView.layer.opacity = 0
         view.addSubview(pickerView)
         NSLayoutConstraint.activate([
-            pickerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 70),
-            pickerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -70),
+            pickerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
+            pickerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
             pickerView.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 50),
-            pickerView.heightAnchor.constraint(equalToConstant: 100)
+            pickerView.heightAnchor.constraint(equalToConstant: 200)
         ])
         pickerView.delegate = self
         pickerView.dataSource = self
@@ -90,18 +92,29 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
     }
     
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-        let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: pickerView.frame.width - 10, height: pickerView.frame.height - 30))
+        let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: pickerView.frame.width, height: pickerView.frame.height))
         if dataOfImages.count != 0 {
             imageView.image = dataOfImages[row]
         }
         imageView.contentMode = .scaleToFill
         return imageView
     }
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        if dataOfImages.count != 0 {
+            imageView.image = dataOfImages[row]
+        }
+        dataOfImages = []
+        pickerView.layer.opacity = 0
+        pickerView.reloadAllComponents()
+    }
     //MARK: - PHPickerViewControllerDelegate
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         if results.count >= 2 {
             let itemProviders = results.map { $0.itemProvider }
             let lock = NSRecursiveLock()
+            DispatchQueue.main.async{
+                self.pickerView.layer.opacity = 1
+            }
             for item in itemProviders {
                 item.loadObject(ofClass: UIImage.self) { image, error in
                     let image = image as? UIImage
@@ -110,14 +123,15 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
                         lock.lock()
                         self.dataOfImages.append(image ?? UIImage())
                         self.pickerView.reloadAllComponents()
+                        
                         defer{ lock.unlock() }
                         print("Image added")
                     }
                     
                 }
             }
+            picker.dismiss(animated: true)
         }
-        picker.dismiss(animated: true)
     }
     
 }
