@@ -132,6 +132,12 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
             }
             picker.dismiss(animated: true)
         }
+        else if (results.count < 2) && (results.count > 0) {
+            picker.showAlert("Ошибка", description: "Выберите минимум 2 картинки, чтобы продолжить", completion: nil)
+        }
+        else if results.count == 0 {
+            picker.dismiss(animated: true)
+        }
     }
     
 }
