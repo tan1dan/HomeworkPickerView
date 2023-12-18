@@ -9,7 +9,7 @@ import UIKit
 import PhotosUI
 
 class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, PHPickerViewControllerDelegate {
-   
+    
     let imageView = UIImageView()
     let pickerView = UIPickerView()
     let button = UIButton(type: .system)
@@ -93,14 +93,14 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
     
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
         let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: pickerView.frame.width, height: pickerView.frame.height))
-        if dataOfImages.count != 0 {
+        if !dataOfImages.isEmpty {
             imageView.image = dataOfImages[row]
         }
         imageView.contentMode = .scaleToFill
         return imageView
     }
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        if dataOfImages.count != 0 {
+        if !dataOfImages.isEmpty {
             imageView.image = dataOfImages[row]
         }
         dataOfImages = []
@@ -135,7 +135,7 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         else if (results.count < 2) && (results.count > 0) {
             picker.showAlert("Ошибка", description: "Выберите минимум 2 картинки, чтобы продолжить", completion: nil)
         }
-        else if results.count == 0 {
+        else if results.isEmpty {
             picker.dismiss(animated: true)
         }
     }
