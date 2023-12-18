@@ -111,7 +111,7 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         if results.count >= 2 {
             let itemProviders = results.map { $0.itemProvider }
-            let lock = NSRecursiveLock()
+//            let lock = NSRecursiveLock()
             DispatchQueue.main.async{
                 self.pickerView.layer.opacity = 1
             }
@@ -120,11 +120,11 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
                     let image = image as? UIImage
                     
                     DispatchQueue.main.async{
-                        lock.lock()
+//                        lock.lock()
                         self.dataOfImages.append(image ?? UIImage())
                         self.pickerView.reloadAllComponents()
                         
-                        defer{ lock.unlock() }
+//                        defer{ lock.unlock() }
                         print("Image added")
                     }
                     
