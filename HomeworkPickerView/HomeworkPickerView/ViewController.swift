@@ -38,7 +38,7 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
             imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
             imageView.heightAnchor.constraint(equalToConstant: 200)
         ])
-        imageView.image = UIImage(resource: ImageResource(name: "log", bundle: .main))
+        imageView.image = UIImage(resource: .log)
         imageView.contentMode = .scaleToFill
     }
     
